@@ -1,0 +1,45 @@
+<body>
+<script src='three.min.js'></script>
+<script src='OrbitControls.js'></script>
+<script>
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 10);
+camera.position.z = 5;
+var renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+let orbit = new THREE.OrbitControls(camera, renderer.domElement);
+
+let arm = new THREE.BoxGeometry(1, 1, 1, 4, 4, 4);
+let material = new THREE.MeshBasicMaterial({color: 0xfffff, wireframe: true});
+let sun = new THREE.Mesh(arm, material);
+let earth = new THREE.Mesh(arm, material);
+let moon = new THREE.Mesh(arm, material);
+
+scene.add(sun);
+
+/* let earth_group = new THREE.Group();
+sun.add(earth_group);
+
+earth_group.add(earth);
+earth.scale.x = earth.scale.y = earth.scale.z=0.4;
+earth_group.position.x = 2;
+*/
+
+/*
+earth_group.add(moon);
+moon.position.x = 0.4;
+moon.scale.x = moon.scale.y = moon.scale.z = 0.1;
+*/
+
+function render() {
+	requestAnimationFrame(render);
+	sun.rotation.y += 0.01;
+	//earth.rotation.y -= 0.01;
+	//earth.rotation.y -= 0.09;
+	renderer.render(scene,camera);
+};
+render();
+</script>
+</body>
+

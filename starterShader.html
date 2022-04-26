@@ -1,0 +1,69 @@
+<body>
+  <div id="container"></div>
+	<script src='three.min.js'></script>
+
+  <script id="vertexShader" type="x-shader/x-vertex">
+        void main()	{
+            gl_Position = vec4( position, 1.0 );
+        }
+    </script>
+
+  <script id="fragmentShader" type="x-shader/x-fragment">
+        uniform float grayscale;
+        void main()	{
+            gl_FragColor = vec4(vec3(grayscale), 1.);
+        }
+    </script>
+  <script>
+    var container;
+    var camera, scene, renderer;
+    var uniforms, material, mesh;
+    var mouseX = 0, mouseY = 0,
+      lat = 0, lon = 0, phy = 0, theta = 0;
+
+    var windowHalfX = window.innerWidth / 2;
+    var windowHalfY = window.innerHeight / 2;
+
+    init();
+    animate();
+
+    function init() {
+      container = document.getElementById('container');
+
+      camera = new THREE.Camera();
+      camera.position.z = 1;
+      scene = new THREE.Scene();
+
+      uniforms = {
+        grayscale: { type: "v", value: 0 },
+      };
+
+      material = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent
+      });
+
+      mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+      scene.add(mesh);
+
+      renderer = new THREE.WebGLRenderer();
+      renderer.setPixelRatio(window.devicePixelRatio ? window.devicePixelRatio : 1);
+      container.appendChild(renderer.domElement);
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      render();
+    }
+
+    function render() {
+      uniforms.grayscale.value += 0.01;
+      if(uniforms.grayscale.value>1.0) uniforms.grayscale.value=0.0;
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+
